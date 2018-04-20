@@ -30,8 +30,8 @@ public class ExampleUnitTest {
     @Test
     public void writeUser() throws IllegalAccessException, IOException, InvocationTargetException {
         User user = new User();
-        user.setName("huaLPppppp");
-        user.setAge(13);
+        user.setName("huaLPpppppqqqqq");
+        user.setAge(23);
         List<Book> b1 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             Book book = new Book();

@@ -12,18 +12,18 @@ import lee.hua.xmlparse.annotation.XmlSingleNode;
 /**
  * Created by lijie on 2017/7/8.
  */
-@XmlBean(name = "UserInfo")
+@XmlBean(name = "UserBean")
 public class User {
     @XmlAttribute
-    public String name;
+    private String name;
     @XmlAttribute
-    public Integer age;
-    @XmlListNode(name = "Knowledge",nodeType = Book.class)
-    public List<Book> books;
-    @XmlSingleNode(name = "Writer",nodeType = Author.class)
-    public Author author;
+    private Integer age;
+    @XmlListNode(name = "Knowledge", nodeType = Book.class)
+    private List<Book> books;
+    @XmlSingleNode(name = "Writer", nodeType = Author.class)
+    private Author author;
     @Ignore()
-    public Book vip;
+    private Book vip;
 
     public User() {
         books = new ArrayList<>();

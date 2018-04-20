@@ -11,13 +11,13 @@ import lee.hua.xmlparse.annotation.XmlSingleNode;
 @XmlBean(name = "Knowledge")
 public class Book {
     @XmlAttribute
-    public String name;
+    private String name;
     @XmlAttribute
-    public Integer page;
+    private Integer page;
     @XmlAttribute
-    public Float price;
+    private Float price;
     @XmlSingleNode(name = "Publisher",nodeType = Publisher.class)
-    public Publisher publishier;
+    private Publisher publishier;
 
     public String getName() {
         return name;

@@ -7,7 +7,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 2
-        versionName "2.2.2"
+        versionName "2.3.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -41,7 +41,7 @@ apply plugin: 'com.jfrog.bintray'
 def siteUrl = 'https://github.com/lijieqing/XMLParser.git'      // 项目的主页   这个是说明，可随便填
 def gitUrl = 'https://github.com/lijieqing/XMLParser.git'      // Git仓库的url  这个是说明，可随便填
 group = "lee.hua.xmlparse"
-version = '2.2.2'
+version = '2.3.0'
 
 //更新仓库 ./gradlew clean build bintrayUpload -PdryRun=false
 
