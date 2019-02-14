@@ -1,5 +1,7 @@
 package lee.hua.xmlparse.xml;
 
+import android.support.annotation.NonNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -96,5 +98,9 @@ public class Globals {
             }
         }
 
+    }
+
+    public static void setClassPathMap(@NonNull String keyName,@NonNull String classPath){
+        xmlNameClassPathMap.put(keyName,classPath);
     }
 }
