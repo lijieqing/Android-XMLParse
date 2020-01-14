@@ -1,6 +1,7 @@
 package lee.hua.xmlparse.api;
 
-import lee.hua.xmlparse.xml.*;
+import android.content.Context;
+
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -12,6 +13,13 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import lee.hua.xmlparse.xml.Globals;
+import lee.hua.xmlparse.xml.XMLAttribute;
+import lee.hua.xmlparse.xml.XMLBase;
+import lee.hua.xmlparse.xml.XMLHasKids;
+import lee.hua.xmlparse.xml.XmlGenerate;
+import lee.hua.xmlparse.xml.XmlReader;
 
 /**
  * Created by lijie on 2017/6/7.
@@ -81,12 +89,20 @@ public class XMLAPI {
      * 设置XmlBean对象扫描包
      *
      * @param packageName 包路径
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException io
+     * @throws ClassNotFoundException class not found
+     * @deprecated 此方法已过时，建议使用 setXmlBeanScanPackage(Context context, String packageName)方法
      */
     public static void setXmlBeanScanPackage(String packageName) throws IOException, ClassNotFoundException {
         Globals.classParse(packageName);
     }
 
-
+    /**
+     * 设置XmlBean对象扫描包
+     *
+     * @param scanPackage 包路径
+     */
+    public static void setXmlBeanScanPackage(Context context, String scanPackage) {
+        Globals.classParse(context, scanPackage);
+    }
 }

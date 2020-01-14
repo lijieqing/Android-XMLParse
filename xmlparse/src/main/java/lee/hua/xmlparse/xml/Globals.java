@@ -1,6 +1,8 @@
 package lee.hua.xmlparse.xml;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,12 +11,14 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import dalvik.system.DexFile;
 import lee.hua.xmlparse.annotation.XmlBean;
 
 /**
  * Created by lijie on 2017/6/14.
  */
 public class Globals {
+    public static final String TAG = "xml-parse";
 
     private Globals() {
     }
@@ -37,6 +41,13 @@ public class Globals {
         return "";
     }
 
+    /**
+     * @param packageName scan package name
+     * @throws IOException            io exception
+     * @throws ClassNotFoundException class not found exception
+     * @deprecated 此方法在 Android 设备上稳定性差，
+     * 请使用{@link lee.hua.xmlparse.xml.Globals} classParse(Context context, String packageName)
+     */
     public static void classParse(String packageName) throws IOException, ClassNotFoundException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         //获取指定包下的包路径
@@ -49,6 +60,28 @@ public class Globals {
         }
 
         System.out.println(xmlNameClassPathMap);
+    }
+
+    public static void classParse(Context context, String packageName) {
+        //增加针对 Android 的 PackageCodePath 检索
+        try {
+            String packageCodePath = context.getPackageCodePath();
+            DexFile df = new DexFile(packageCodePath);//通过DexFile查找当前的APK中可执行文件
+            Enumeration<String> enumeration = df.entries();//获取df中的元素  这里包含了所有可执行的类名 该类名包含了包名+类名的方式
+            while (enumeration.hasMoreElements()) {//遍历
+                String className = enumeration.nextElement();
+                if (className.contains(packageName)) {
+                    String[] names = className.split("\\.");
+                    String key = names[names.length - 1];
+                    Log.d(TAG, "class :: " + className);
+                    Log.d(TAG, "class Name :: " + key);
+                    xmlNameClassPathMap.put(key, className);
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
