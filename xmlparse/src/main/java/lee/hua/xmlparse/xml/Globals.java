@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -19,6 +20,32 @@ import lee.hua.xmlparse.annotation.XmlBean;
  */
 public class Globals {
     public static final String TAG = "xml-parse";
+    public static ContextHolder holder;
+    public static Context mContext;
+
+    public static void classParse(Context context, String packageName) {
+        holder = new ContextHolder(context);
+        mContext = context;
+        //增加针对 Android 的 PackageCodePath 检索
+        try {
+            String packageCodePath = context.getPackageCodePath();
+            DexFile df = new DexFile(packageCodePath);//通过DexFile查找当前的APK中可执行文件
+            Enumeration<String> enumeration = df.entries();//获取df中的元素  这里包含了所有可执行的类名 该类名包含了包名+类名的方式
+            while (enumeration.hasMoreElements()) {//遍历
+                String className = enumeration.nextElement();
+                if (className.contains(packageName)) {
+                    String[] names = className.split("\\.");
+                    String key = names[names.length - 1];
+                    Log.d(TAG, "class :: " + className);
+                    Log.d(TAG, "class Name :: " + key);
+                    xmlNameClassPathMap.put(key, className);
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     private Globals() {
     }
@@ -62,28 +89,6 @@ public class Globals {
         System.out.println(xmlNameClassPathMap);
     }
 
-    public static void classParse(Context context, String packageName) {
-        //增加针对 Android 的 PackageCodePath 检索
-        try {
-            String packageCodePath = context.getPackageCodePath();
-            DexFile df = new DexFile(packageCodePath);//通过DexFile查找当前的APK中可执行文件
-            Enumeration<String> enumeration = df.entries();//获取df中的元素  这里包含了所有可执行的类名 该类名包含了包名+类名的方式
-            while (enumeration.hasMoreElements()) {//遍历
-                String className = enumeration.nextElement();
-                if (className.contains(packageName)) {
-                    String[] names = className.split("\\.");
-                    String key = names[names.length - 1];
-                    Log.d(TAG, "class :: " + className);
-                    Log.d(TAG, "class Name :: " + key);
-                    xmlNameClassPathMap.put(key, className);
-                }
-            }
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 递归搜索指定路径文件下的类文件
      *
@@ -118,7 +123,10 @@ public class Globals {
                 //组装包路径
                 sb = new StringBuilder(packageName).append(".").append(fname);
                 System.out.println("扫描类信息-" + sb.toString());
-                Class<?> clazz = Class.forName(sb.toString());
+                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                //ClassLoader classLoader = Globals.mContext.getClassLoader();
+                Class<?> clazz = classLoader.loadClass(sb.toString());
+                //Class<?> clazz = Class.forName(sb.toString());
                 XmlBean xmlBean = clazz.getAnnotation(XmlBean.class);
                 //通过反射获取XmlBean注解，如果存在，加入map中
                 if (xmlBean != null) {
@@ -131,6 +139,18 @@ public class Globals {
             }
         }
 
+    }
+
+    public static class ContextHolder {
+        WeakReference<Context> ref;
+
+        private ContextHolder(Context context) {
+            this.ref = new WeakReference<>(context);
+        }
+
+        public Context get() {
+            return holder.get();
+        }
     }
 
     public static void setClassPathMap(@NonNull String keyName,@NonNull String classPath){

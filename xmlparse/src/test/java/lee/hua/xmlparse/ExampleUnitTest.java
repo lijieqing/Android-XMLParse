@@ -55,8 +55,8 @@ public class ExampleUnitTest {
 
     @Test
     public void readUser() throws IOException, ClassNotFoundException {
-        XMLAPI.setXmlBeanScanPackage("lee.hua.xmlparse.xmlbean");
-        User object = (User) XMLAPI.readXML(new FileInputStream("/Users/lijie/Desktop/user.xml"));
-        System.out.println(object);
+        //XMLAPI.setXmlBeanScanPackage("lee.hua.xmlparse.xmlbean");
+        //User object = (User) XMLAPI.readXML(new FileInputStream("/Users/lijie/Desktop/user.xml"));
+        //System.out.println(object);
     }
 }

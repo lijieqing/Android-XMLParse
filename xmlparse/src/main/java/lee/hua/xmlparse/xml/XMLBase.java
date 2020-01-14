@@ -59,6 +59,7 @@ public abstract class XMLBase {
     }
 
     protected void valueFormat(String type, Object o, Object value, Field field) throws IllegalAccessException {
+        //Log.d(Globals.TAG, "valueFormat params is " + type + "," + o + "," + value + "," + field.getName());
         if (type.contains(".String")) {
             XMLAttribute attr = (XMLAttribute) value;
             field.set(o, attr.getValues());

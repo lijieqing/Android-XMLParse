@@ -1,9 +1,11 @@
 package lee.hua.xmlparse.xml;
 
-import lee.hua.xmlparse.annotation.Ignore;
-import lee.hua.xmlparse.annotation.XmlAttribute;
+import android.util.Log;
 
 import java.lang.reflect.Field;
+
+import lee.hua.xmlparse.annotation.Ignore;
+import lee.hua.xmlparse.annotation.XmlAttribute;
 
 /**
  * Created by lijie on 2017/6/7.
@@ -41,11 +43,16 @@ public class XMLNoChilds extends XMLBase {
         }
         Object o = null;
         try {
-            Class<?> clazz = Class.forName(className);
+            Log.d(Globals.TAG, "class Name : " + className);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            //ClassLoader classLoader = Globals.mContext.getClassLoader();
+            Class<?> clazz = classLoader.loadClass(className);
+            //Class<?> clazz = Class.forName(className);
             o = clazz.newInstance();
             Field[] fileds = clazz.getDeclaredFields();
 
             for (Field field : fileds) {
+                Log.d(Globals.TAG, "xml no kids field name = "+field.getName());
                 //当注解不是ignore时
                 Ignore ignore = field.getAnnotation(Ignore.class);
                 if (ignore == null) {
@@ -74,11 +81,8 @@ public class XMLNoChilds extends XMLBase {
                 }
             }
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            Log.d(Globals.TAG, e.getMessage());
             e.printStackTrace();
         }
         return o;

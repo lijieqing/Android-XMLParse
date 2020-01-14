@@ -1,10 +1,16 @@
 package lee.hua.xmlparse.xml;
 
-import lee.hua.xmlparse.annotation.*;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import lee.hua.xmlparse.annotation.Ignore;
+import lee.hua.xmlparse.annotation.XmlAttribute;
+import lee.hua.xmlparse.annotation.XmlBean;
+import lee.hua.xmlparse.annotation.XmlListNode;
+import lee.hua.xmlparse.annotation.XmlSingleNode;
 
 /**
  * Created by lijie on 2017/6/7.
@@ -67,12 +73,17 @@ public class XMLHasKids extends XMLBase {
         }
         Object o = null;
         try {
-            Class<?> clazz = Class.forName(className);
+            Log.d(Globals.TAG, "class Name : " + className);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            //ClassLoader classLoader = Globals.mContext.getClassLoader();
+            Class<?> clazz = classLoader.loadClass(className);
+            //Class<?> clazz = Class.forName(className);
             o = clazz.newInstance();
             Field[] filds = clazz.getDeclaredFields();
             XmlBean xmlBean = clazz.getAnnotation(XmlBean.class);
 
             for (Field field : filds) {
+                Log.d(Globals.TAG, "xml has kids field name = " + field.getName());
                 //当注解不是ignore时
                 Ignore ignore = field.getAnnotation(Ignore.class);
                 if ((xmlBean != null && ignore == null) || (xmlBean == null && ignore == null)) {
@@ -96,7 +107,7 @@ public class XMLHasKids extends XMLBase {
                         //遍历属性集合
                         for (XMLAttribute xmlAttr : XMLAttributes) {
                             String name = xmlAttr.getName().toLowerCase();
-                            System.out.println(name + xmlAttr.getValues());
+                            Log.d(Globals.TAG, "name:" + name + ", val:" + xmlAttr.getValues());
                             if (attrName.equals(name)) {
                                 String type = field.getGenericType().toString();
                                 //寻找属性对应的set方法

@@ -105,4 +105,8 @@ public class XMLAPI {
     public static void setXmlBeanScanPackage(Context context, String scanPackage) {
         Globals.classParse(context, scanPackage);
     }
+
+    public static void setClassLoader(ClassLoader classLoader) {
+        Thread.currentThread().setContextClassLoader(classLoader);
+    }
 }
