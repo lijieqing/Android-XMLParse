@@ -6,7 +6,6 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -19,13 +18,9 @@ import lee.hua.xmlparse.annotation.XmlBean;
  * Created by lijie on 2017/6/14.
  */
 public class Globals {
-    public static final String TAG = "xml-parse";
-    public static ContextHolder holder;
-    public static Context mContext;
+    static final String TAG = "xml-parse";
 
     public static void classParse(Context context, String packageName) {
-        holder = new ContextHolder(context);
-        mContext = context;
         //增加针对 Android 的 PackageCodePath 检索
         try {
             String packageCodePath = context.getPackageCodePath();
@@ -139,18 +134,6 @@ public class Globals {
             }
         }
 
-    }
-
-    public static class ContextHolder {
-        WeakReference<Context> ref;
-
-        private ContextHolder(Context context) {
-            this.ref = new WeakReference<>(context);
-        }
-
-        public Context get() {
-            return holder.get();
-        }
     }
 
     public static void setClassPathMap(@NonNull String keyName,@NonNull String classPath){
